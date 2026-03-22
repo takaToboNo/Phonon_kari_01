@@ -276,7 +276,7 @@ MonoBehaviour:
   smoothSpeed: 50
   itemLayer:
     serializedVersion: 2
-    m_Bits: 128
+    m_Bits: 16512
   maxGrabDistance: 2
   audioSource: {fileID: 5586462897706473192}
   grabSound: {fileID: 8300000, guid: e4c97758b8cffa64596475bdcf1287d4, type: 3}
