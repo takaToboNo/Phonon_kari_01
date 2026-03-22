@@ -1,16 +1,10 @@
 fileFormatVersion: 2
-guid: 10f3216d2e0f4d94cae7f9fd85eea6c3
+guid: b102db7520d617b449fd7d4b45ec9b7b
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 129581428671300448
-    second: saundWeve_0
-  - first:
-      213: 1455003339371151664
-    second: saundWeve_1
-  - first:
-      213: -994196184796247255
-    second: saundWeve_2
+      213: -5791533861771406970
+    second: switch_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -102,27 +96,40 @@ TextureImporter:
     ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: saundWeve_0
+      name: switch_0
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
-        width: 1264
-        height: 629
+        x: 49
+        y: 25
+        width: 289
+        height: 254
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 063c0717f9d5cc100800000000000000
-      internalID: 129581428671300448
+      spriteID: 681187833a650afa0800000000000000
+      internalID: -5791533861771406970
       vertices: []
       indices: 
       edges: []
@@ -131,7 +138,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 0c00b64629030e64aa3014d6975b8729
+    spriteID: 
     internalID: 0
     vertices: []
     indices: 
@@ -141,9 +148,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      saundWeve_0: 129581428671300448
-      saundWeve_1: 1455003339371151664
-      saundWeve_2: -994196184796247255
+      switch_0: -5791533861771406970
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

@@ -1,66 +1,63 @@
 using UnityEngine;
 
-// このコンポーネントにはRigidbody2Dが必要であることを保証する
-[RequireComponent(typeof(Rigidbody2D))]
+[RequireComponent(typeof(AudioSource))]
 public class SoundEmitter : MonoBehaviour
 {
-    [Header("参照設定")]
-    [Tooltip("生成する音波のプレハブを割り当ててください")]
     [SerializeField] private GameObject soundWavePrefab;
-
-    [Header("音波の生成条件")]
-    [Tooltip("地面として判定するレイヤーを選択してください")]
     [SerializeField] private LayerMask groundLayer;
+    [SerializeField] private float minVelocity = 5.0f;
 
-    [Tooltip("この速度（勢い）より速くぶつかった時だけ音波を出します")]
-    [SerializeField] private float minVelocityToEmit = 5.0f;
+    [Header("音波の設定")]
+    [SerializeField] private float waveSpeed = 2.0f;
+    [SerializeField] private float waveLifeTime = 3.0f;
+    [SerializeField] private float waveScale = 1.0f;
 
-    [Header("音波の動き設定")]
-    [Tooltip("生成された音波が移動するスピード")]
-    [SerializeField] private float waveMoveSpeed = 2.0f;
+    [Header("音の設定")]
+    [SerializeField] private AudioSource audioSource;
+    [SerializeField] private AudioClip emitSound; // 音波が出た時の音
+    [Range(0f, 0.3f)][SerializeField] private float pitchRandomness = 0.1f;
+
+    void Awake()
+    {
+        if (audioSource == null) audioSource = GetComponent<AudioSource>();
+        audioSource.playOnAwake = false;
+    }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        // 1. ぶつかった相手が「地面」レイヤーかチェック
+        // レイヤーチェック
         if (((1 << collision.gameObject.layer) & groundLayer) != 0)
         {
-            // 2. ぶつかった時の「相対速度」の大きさを取得
-            float impactVelocity = collision.relativeVelocity.magnitude;
-
-            // 3. 一定以上の強さでぶつかったか判定
-            if (impactVelocity > minVelocityToEmit)
+            // 衝突の勢いが一定以上かチェック
+            if (collision.relativeVelocity.magnitude > minVelocity)
             {
-                // 衝突情報全体を渡して音波を生成
-                EmitSoundWave(collision);
+                EmitWave(collision);
             }
         }
     }
 
-    private void EmitSoundWave(Collision2D collision)
+    private void EmitWave(Collision2D collision)
     {
-        if (soundWavePrefab == null)
-        {
-            Debug.LogWarning($"SoundEmitter on {gameObject.name}: SoundWavePrefabが割り当てられていません。");
-            return;
-        }
-
-        // 最初にぶつかった点（接点）の情報を取得
         ContactPoint2D contact = collision.contacts[0];
 
-        // 壁の垂直方向（法線）を取得。これが進む向きになる。
-        Vector2 wallNormal = contact.normal;
-
-        // 音波プレハブを、ぶつかった位置に生成
+        // 音波の生成
         GameObject wave = Instantiate(soundWavePrefab, contact.point, Quaternion.identity);
 
-        // 生成した音波のスクリプトを取得し、初期化（向きと速度を渡す）
         if (wave.TryGetComponent<SoundWavePlatform>(out SoundWavePlatform platform))
         {
-            platform.Initialize(wallNormal, waveMoveSpeed);
+            platform.Initialize(contact.normal, waveSpeed, waveLifeTime, waveScale);
         }
-        else
-        {
-            Debug.LogError($"SoundEmitter: 生成したプレハブに 'SoundWavePlatform' スクリプトが付いていません。");
-        }
+
+        // --- SEを鳴らす ---
+        PlayEmitSE();
+    }
+
+    private void PlayEmitSE()
+    {
+        if (emitSound == null || audioSource == null) return;
+
+        // ピッチをランダム化して、連続発生時の機械的な感じをなくす
+        audioSource.pitch = 1f + Random.Range(-pitchRandomness, pitchRandomness);
+        audioSource.PlayOneShot(emitSound);
     }
 }

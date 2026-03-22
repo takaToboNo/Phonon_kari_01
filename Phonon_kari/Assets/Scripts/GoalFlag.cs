@@ -1,30 +1,58 @@
 using UnityEngine;
-using UnityEngine.SceneManagement; // シーン切り替えに必要
+using UnityEngine.SceneManagement;
 
+[RequireComponent(typeof(AudioSource))]
 public class GoalFlag : MonoBehaviour
 {
     [Header("参照設定")]
-    [SerializeField] private GameObject clearUI; // 先ほど作ったClearCanvasをアタッチ
-    [SerializeField] private string nextSceneName; // 次のステージのシーン名
+    [SerializeField] private GameObject clearUI;
+    [SerializeField] private string nextSceneName;
+
+    [Header("音の設定")]
+    [SerializeField] private AudioSource audioSource;
+    [SerializeField] private AudioClip clearSound; // クリア時の音
+    [Range(0f, 0.3f)][SerializeField] private float pitchRandomness = 0.05f;
+
+    private bool isCleared = false; // 二重発動防止
+
+    void Awake()
+    {
+        if (audioSource == null) audioSource = GetComponent<AudioSource>();
+        audioSource.playOnAwake = false;
+    }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        // プレイヤーが旗に触れたかチェック
+        // すでにクリア済みなら何もしない
+        if (isCleared) return;
+
         if (collision.CompareTag("Player"))
         {
+            isCleared = true;
+
+            // --- クリア音を鳴らす ---
+            PlayClearSE();
+
             ShowClearMenu();
         }
     }
 
+    private void PlayClearSE()
+    {
+        if (clearSound == null || audioSource == null) return;
+
+        // クリア音はあまりピッチを変えすぎないのがコツ（0.05くらい）
+        audioSource.pitch = 1f + Random.Range(-pitchRandomness, pitchRandomness);
+        audioSource.PlayOneShot(clearSound);
+    }
+
     private void ShowClearMenu()
     {
-        // クリア画面を表示
         clearUI.SetActive(true);
 
-        // ゲームを一時停止（動かしたくない場合）
+        // ゲームを一時停止
         Time.timeScale = 0f;
 
-        // マウスカーソルを表示する（隠している場合）
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
     }
@@ -33,16 +61,13 @@ public class GoalFlag : MonoBehaviour
 
     public void NextLevel()
     {
-        Time.timeScale = 1f; // 時間を動かす
+        Time.timeScale = 1f;
         SceneManager.LoadScene(nextSceneName);
     }
 
     public void RestartLevel()
     {
-        // 時間を動かす（一時停止していた場合のため）
         Time.timeScale = 1f;
-
-        // 現在アクティブなシーンの名前を取得して、それをロードする
         string currentSceneName = SceneManager.GetActiveScene().name;
         SceneManager.LoadScene(currentSceneName);
     }
@@ -50,6 +75,6 @@ public class GoalFlag : MonoBehaviour
     public void BackToTitle()
     {
         Time.timeScale = 1f;
-        SceneManager.LoadScene("TitleScene"); // タイトルシーンの名前に合わせて変更
+        SceneManager.LoadScene("TitleScene");
     }
 }
