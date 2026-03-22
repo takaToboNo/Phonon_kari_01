@@ -130,7 +130,7 @@ CapsuleCollider2D:
   m_CompositeOperation: 0
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 3}
-  m_Size: {x: 8, y: 11}
+  m_Size: {x: 11, y: 15}
   m_Direction: 0
 --- !u!114 &7857203633001759209
 MonoBehaviour:
@@ -148,7 +148,7 @@ MonoBehaviour:
   wavePrefab: {fileID: 1504280822440212730, guid: df5df17b2f7f18c408f15cff39118d66, type: 3}
   waveSpeed: 5
   waveLifeTime: 3
-  coolTime: 2
+  coolTime: 0.5
   waveScale: 1
   audioSource: {fileID: 3332257591267893555}
   vibrateSound: {fileID: 8300000, guid: 67f8f179fe6fc394496b79c51046ca68, type: 3}
