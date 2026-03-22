@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &8997353638602841836
+--- !u!1 &1220674200298851715
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,40 +8,40 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 4331566540447640555}
-  - component: {fileID: 3511467007508111014}
-  - component: {fileID: 6757243114599981743}
-  - component: {fileID: 6600252292037757126}
-  m_Layer: 13
-  m_Name: needle
+  - component: {fileID: 2362406867470324558}
+  - component: {fileID: 1424081023418531275}
+  - component: {fileID: 3150219591791197020}
+  - component: {fileID: 4371831598725086678}
+  m_Layer: 0
+  m_Name: onsa_gimmick
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &4331566540447640555
+--- !u!4 &2362406867470324558
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8997353638602841836}
+  m_GameObject: {fileID: 1220674200298851715}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -2.97, y: -4.16, z: 0}
-  m_LocalScale: {x: 0.187577, y: 0.187577, z: 0.187577}
+  m_LocalPosition: {x: 0.07627797, y: 0.52, z: 0}
+  m_LocalScale: {x: 0.13754688, y: 0.13754688, z: 0.13754688}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!212 &3511467007508111014
+--- !u!212 &1424081023418531275
 SpriteRenderer:
   serializedVersion: 2
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8997353638602841836}
+  m_GameObject: {fileID: 1220674200298851715}
   m_Enabled: 1
   m_CastShadows: 0
   m_ReceiveShadows: 0
@@ -83,23 +83,23 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 542796057223170383, guid: 1f06cffb674cf1b48bd239b4dc1f0706, type: 3}
+  m_Sprite: {fileID: -512183399541872780, guid: fa89579d6c0538e4fad118a87118d897, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 4.9, y: 5.67}
+  m_Size: {x: 6.45, y: 10.21}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
---- !u!61 &6757243114599981743
-BoxCollider2D:
+--- !u!70 &3150219591791197020
+CapsuleCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8997353638602841836}
+  m_GameObject: {fileID: 1220674200298851715}
   m_Enabled: 1
   serializedVersion: 3
   m_Density: 1
@@ -127,27 +127,20 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0.03379411, y: -0.886101}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 4.9, y: 5.67}
-    newSize: {x: 4.9, y: 5.67}
-    adaptiveTilingThreshold: 0.5
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  m_Size: {x: 3.81861, y: 3.897798}
-  m_EdgeRadius: 0
---- !u!114 &6600252292037757126
+  m_Offset: {x: 0, y: 1}
+  m_Size: {x: 6.450001, y: 9}
+  m_Direction: 0
+--- !u!114 &4371831598725086678
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8997353638602841836}
+  m_GameObject: {fileID: 1220674200298851715}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: be0fcd4ea03c254438801f84a5ea85a4, type: 3}
+  m_Script: {fileID: 11500000, guid: 71d29a488d09a4449b0512e29c0bd78f, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Needle
+  m_EditorClassIdentifier: Assembly-CSharp::VibrationGimmick
+  targetObject: {fileID: 0}
+  soundWaveLayerName: SoundWave
