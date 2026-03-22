@@ -1,58 +1,52 @@
 using UnityEngine;
 
-/// <summary>
-/// 2Dオブジェクトを平行移動させるシンプルなスクリプト。
-/// 配置した位置を中心に、指定した幅・速度で往復移動します。
-/// </summary>
+[RequireComponent(typeof(Rigidbody2D))]
 public class FloorMover : MonoBehaviour
 {
-    // =====================================================================
-    //  移動設定
-    // =====================================================================
     [Header("── 移動設定 ───────────────────")]
-
-    [Tooltip("X軸方向の移動幅（片側の最大値）")]
     public float moveWidthX = 1f;
-
-    [Tooltip("Y軸方向の移動幅（片側の最大値）")]
     public float moveWidthY = 0f;
-
-    [Tooltip("移動速度（1秒あたりの往復周期数）")]
-    [Min(0f)]
     public float moveSpeed = 1f;
 
-    // =====================================================================
-    //  内部状態
-    // =====================================================================
     private float _phase = 0f;
-    private Vector3 _startLocalPosition;
+    private Vector2 _startPosition;
+    private Rigidbody2D _rb;
 
-    // =====================================================================
-    //  初期化
-    // =====================================================================
+    void Awake()
+    {
+        _rb = GetComponent<Rigidbody2D>();
+        // 物理設定を床用に最適化
+        _rb.bodyType = RigidbodyType2D.Kinematic;
+        _rb.useFullKinematicContacts = true;
+        _rb.interpolation = RigidbodyInterpolation2D.Interpolate; // 動きを滑らかにする
+    }
+
     void Start()
     {
-        _startLocalPosition = transform.localPosition;
+        _startPosition = transform.position;
     }
 
-    // =====================================================================
-    //  毎フレーム更新
-    // =====================================================================
-    void Update()
+    // 動く床は FixedUpdate で計算するのが鉄則です
+    void FixedUpdate()
     {
-        _phase += moveSpeed * Time.deltaTime * Mathf.PI * 2f;
+        // 1. フェーズを更新
+        _phase += moveSpeed * Time.fixedDeltaTime * Mathf.PI * 2f;
 
+        // 2. 次の目標地点を計算
         float wave = Mathf.Sin(_phase);
-        Vector3 localOffset = new Vector3(moveWidthX * wave, moveWidthY * wave, 0f);
-        transform.localPosition = _startLocalPosition + localOffset;
+        Vector2 targetPosition = _startPosition + new Vector2(moveWidthX * wave, moveWidthY * wave);
+
+        // 3. 【重要】「現在の位置」から「目標位置」へ行くための速度を計算
+        // これにより、物理エンジンが「この床は今この速度で動いている」と正しく認識します
+        Vector2 velocity = (targetPosition - (Vector2)transform.position) / Time.fixedDeltaTime;
+
+        // 4. 速度をセット
+        _rb.linearVelocity = velocity;
     }
 
-    // =====================================================================
-    //  外部制御 API
-    // =====================================================================
     public void ResetStartPosition()
     {
-        _startLocalPosition = transform.localPosition;
+        _startPosition = transform.position;
         _phase = 0f;
     }
 

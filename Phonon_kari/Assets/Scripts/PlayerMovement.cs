@@ -26,14 +26,19 @@ public class PlayerMovement : MonoBehaviour
     private float coyoteTimeCounter;
     private float colliderHalfHeight;
 
+    // --- 足場追従用の変数 ---
+    private Rigidbody2D movingPlatformRb;
+    private Vector2 platformVelocity;
+
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         col = GetComponent<BoxCollider2D>();
         playerGrab = GetComponent<PlayerGrab>();
-
-        // 最新のコライダーサイズから判定位置を計算
         colliderHalfHeight = col.size.y / 2f;
+
+        // 回転を物理で変えられないように固定（念のため）
+        rb.freezeRotation = true;
     }
 
     void Update()
@@ -45,14 +50,8 @@ public class PlayerMovement : MonoBehaviour
 
     private void HandleInput()
     {
-        if (Time.timeScale == 0f)
-        {
-            horizontalInput = 0f;
-            return;
-        }
-
+        if (Time.timeScale == 0f) { horizontalInput = 0f; return; }
         horizontalInput = 0f;
-
         if (playerGrab != null && playerGrab.IsAiming) return;
 
         if (Gamepad.current != null)
@@ -80,16 +79,21 @@ public class PlayerMovement : MonoBehaviour
             {
                 isGrounded = true;
                 coyoteTimeCounter = coyoteTime;
+
+                // 足場のRigidbody2Dを取得（動く足場用）
+                movingPlatformRb = hit.collider.GetComponent<Rigidbody2D>();
             }
             else
             {
                 isGrounded = false;
+                movingPlatformRb = null;
             }
         }
         else
         {
             isGrounded = false;
             coyoteTimeCounter -= Time.deltaTime;
+            movingPlatformRb = null;
         }
     }
 
@@ -101,47 +105,31 @@ public class PlayerMovement : MonoBehaviour
 
         if (jumpPressed && coyoteTimeCounter > 0f)
         {
-            // ジャンプした瞬間に親子関係を解消しないと、空中で足場の影響を受けてしまうため解除
-            transform.SetParent(null);
-
             coyoteTimeCounter = 0f;
+            // ジャンプ時は足場の速度にジャンプ力を足す
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
         }
     }
 
     void FixedUpdate()
     {
-        rb.linearVelocity = new Vector2(horizontalInput * moveSpeed, rb.linearVelocity.y);
-    }
+        Vector2 currentVel = rb.linearVelocity;
+        Vector2 platformVel = Vector2.zero;
 
-    // --- 動く足場（Groundレイヤー）への対応 ---
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-        // 衝突相手がGroundレイヤーに含まれているか
-        if (((1 << collision.gameObject.layer) & groundLayer) != 0)
+        // 音波が物理的に動いていれば、ここで速度(linearVelocity)が取得できる
+        if (movingPlatformRb != null)
         {
-            // 上から踏んでいる（法線が上向き）場合のみ子になる
-            if (collision.contactCount > 0 && collision.contacts[0].normal.y > 0.5f)
-            {
-                transform.SetParent(collision.transform);
-            }
+            platformVel = movingPlatformRb.linearVelocity;
         }
+
+        float targetRelativePosX = horizontalInput * moveSpeed;
+        float currentRelativePosX = currentVel.x - platformVel.x;
+
+        // 加速感（10fの数値）はお好みで調整してください
+        float newRelativePosX = Mathf.MoveTowards(currentRelativePosX, targetRelativePosX, moveSpeed * 20f * Time.fixedDeltaTime);
+
+        rb.linearVelocity = new Vector2(newRelativePosX + platformVel.x, currentVel.y);
     }
 
-    private void OnCollisionExit2D(Collision2D collision)
-    {
-        // 足場から離れたら親子関係を解除
-        if (transform.parent == collision.transform)
-        {
-            transform.SetParent(null);
-        }
-    }
-
-    private void OnDrawGizmosSelected()
-    {
-        if (col == null) col = GetComponent<BoxCollider2D>();
-        Gizmos.color = Color.yellow;
-        Vector2 origin = (Vector2)transform.position + new Vector2(0, -(col.size.y / 2f) + groundCheckOffset);
-        Gizmos.DrawWireCube(origin, groundCheckSize);
-    }
+    // --- SetParentを使わない方式にしたため、OnCollision系は削除してOK ---
 }
