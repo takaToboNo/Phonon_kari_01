@@ -332,7 +332,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 76c392e42b5098c458856cdf6ecaaaa1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.EventSystems.EventSystem
-  m_FirstSelected: {fileID: 0}
+  m_FirstSelected: {fileID: 1403661472}
   m_sendNavigationEvents: 1
   m_DragThreshold: 10
 --- !u!4 &366917213
@@ -493,7 +493,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 775329438}
         m_TargetAssemblyTypeName: GoalFlag, Assembly-CSharp
         m_MethodName: RestartLevel
         m_Mode: 1
@@ -751,7 +751,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 775329438}
         m_TargetAssemblyTypeName: GoalFlag, Assembly-CSharp
         m_MethodName: BackToTitle
         m_Mode: 1
@@ -876,7 +876,7 @@ PrefabInstance:
       objectReference: {fileID: 1103106943}
     - target: {fileID: 5360033835834857, guid: 3565f9b878559c7459280237b8cd68fc, type: 3}
       propertyPath: nextSceneName
-      value: Stage2
+      value: Stage1
       objectReference: {fileID: 0}
     - target: {fileID: 6235238032722643805, guid: 3565f9b878559c7459280237b8cd68fc, type: 3}
       propertyPath: m_Name
@@ -939,6 +939,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3565f9b878559c7459280237b8cd68fc, type: 3}
+--- !u!114 &775329438 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5360033835834857, guid: 3565f9b878559c7459280237b8cd68fc, type: 3}
+  m_PrefabInstance: {fileID: 775329437}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 17389f5d0ee1287459b56b6d750adedc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GoalFlag
 --- !u!1001 &880510565
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1282,6 +1293,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 1309715815156877762, guid: fa47a12640171104eb89ed3a31b1670c, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1907871485}
+    - targetCorrespondingSourceObject: {fileID: 1309715815156877762, guid: fa47a12640171104eb89ed3a31b1670c, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1907871486}
   m_SourcePrefab: {fileID: 100100000, guid: fa47a12640171104eb89ed3a31b1670c, type: 3}
 --- !u!1001 &980800114
 PrefabInstance:
@@ -1411,6 +1425,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 7758698308711552490, guid: d77b7df0eaee112419a6e6b0b0e930e7, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1240559280}
+    - targetCorrespondingSourceObject: {fileID: 7758698308711552490, guid: d77b7df0eaee112419a6e6b0b0e930e7, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1240559281}
   m_SourcePrefab: {fileID: 100100000, guid: d77b7df0eaee112419a6e6b0b0e930e7, type: 3}
 --- !u!1001 &989951966
 PrefabInstance:
@@ -1645,6 +1662,33 @@ MonoBehaviour:
   moveWidthX: 0
   moveWidthY: 2
   moveSpeed: 0.5
+--- !u!50 &1240559281
+Rigidbody2D:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1240559275}
+  m_BodyType: 0
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_GravityScale: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0
 --- !u!1001 &1243395257
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1914,7 +1958,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 775329438}
         m_TargetAssemblyTypeName: GoalFlag, Assembly-CSharp
         m_MethodName: NextLevel
         m_Mode: 1
@@ -2506,6 +2550,33 @@ MonoBehaviour:
   moveWidthX: 1
   moveWidthY: 0
   moveSpeed: 0.2
+--- !u!50 &1907871486
+Rigidbody2D:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1907871484}
+  m_BodyType: 0
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_GravityScale: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0
 --- !u!1001 &1925435913
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2575,6 +2646,7 @@ SceneRoots:
   - {fileID: 955103174}
   - {fileID: 1609369833}
   - {fileID: 366917213}
+  - {fileID: 906386710}
   - {fileID: 775329437}
   - {fileID: 1322729873}
   - {fileID: 1638105162}
@@ -2596,4 +2668,3 @@ SceneRoots:
   - {fileID: 488743753}
   - {fileID: 701230910}
   - {fileID: 1294756717}
-  - {fileID: 906386710}
