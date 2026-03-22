@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using System.Collections.Generic;
 
+[RequireComponent(typeof(AudioSource))]
 public class PlayerGrab : MonoBehaviour
 {
     [Header("設定")]
@@ -9,7 +10,13 @@ public class PlayerGrab : MonoBehaviour
     [SerializeField] private float throwForce = 15f;
     [SerializeField] private float smoothSpeed = 20f;
     [SerializeField] private LayerMask itemLayer;
-    [SerializeField] private float maxGrabDistance = 2.0f; // 念のための最大到達距離
+    [SerializeField] private float maxGrabDistance = 2.0f;
+
+    [Header("SE設定")]
+    [SerializeField] private AudioSource audioSource;
+    [SerializeField] private AudioClip grabSound;
+    [SerializeField] private AudioClip throwSound;
+    [Range(0f, 0.3f)][SerializeField] private float pitchRandomness = 0.1f;
 
     private GameObject grabbedObject;
     private Rigidbody2D grabbedRb;
@@ -18,6 +25,14 @@ public class PlayerGrab : MonoBehaviour
     private bool isAiming = false;
     private Vector2 aimDirection = Vector2.right;
     public bool IsAiming => isAiming;
+
+    void Awake()
+    {
+        // AudioSourceの自動取得と初期設定
+        if (audioSource == null) audioSource = GetComponent<AudioSource>();
+        audioSource.playOnAwake = false;
+        audioSource.loop = false;
+    }
 
     void Update()
     {
@@ -36,7 +51,6 @@ public class PlayerGrab : MonoBehaviour
     {
         if (Gamepad.current == null && Keyboard.current == null) return;
 
-        // --- 掴む処理の修正 ---
         bool grabPressed = (Mouse.current != null && Mouse.current.leftButton.wasPressedThisFrame) ||
                            (Gamepad.current != null && Gamepad.current.buttonWest.wasPressedThisFrame);
 
@@ -45,7 +59,6 @@ public class PlayerGrab : MonoBehaviour
             TryGrabNearestItem();
         }
 
-        // --- 投げる・離す処理 ---
         bool dropButtonHeld = (Gamepad.current != null && Gamepad.current.buttonEast.isPressed) ||
                               (Mouse.current != null && Mouse.current.rightButton.isPressed);
 
@@ -70,8 +83,7 @@ public class PlayerGrab : MonoBehaviour
 
     private void TryGrabNearestItem()
     {
-        // リストの中から「本当に今近くにあるもの」だけを探す
-        canGrabItems.RemoveAll(item => item == null); // 削除済みオブジェクトを掃除
+        canGrabItems.RemoveAll(item => item == null);
 
         GameObject nearest = null;
         float minDist = maxGrabDistance;
@@ -100,10 +112,12 @@ public class PlayerGrab : MonoBehaviour
         if (grabbedRb != null)
         {
             grabbedRb.simulated = false;
-            // 掴んだ瞬間に速度を完全にゼロにする（持ち越し防止）
             grabbedRb.linearVelocity = Vector2.zero;
             grabbedRb.angularVelocity = 0f;
         }
+
+        // --- 音を鳴らす ---
+        PlayRandomPitchSE(grabSound);
     }
 
     private void ThrowItem()
@@ -117,15 +131,22 @@ public class PlayerGrab : MonoBehaviour
         if (rbToThrow != null)
         {
             rbToThrow.simulated = true;
-
-            // 【重要】投げる直前に現在の速度をリセットする
-            // これをしないと、プレイヤーの移動速度や前回の投げの慣性が乗って加速し続けます
             rbToThrow.linearVelocity = Vector2.zero;
             rbToThrow.angularVelocity = 0f;
-
-            // 新たに一定の力を加える
             rbToThrow.AddForce(aimDirection * throwForce, ForceMode2D.Impulse);
+
+            // --- 音を鳴らす ---
+            PlayRandomPitchSE(throwSound);
         }
+    }
+
+    private void PlayRandomPitchSE(AudioClip clip)
+    {
+        if (clip == null || audioSource == null) return;
+
+        // ピッチをランダム化して再生
+        audioSource.pitch = 1f + Random.Range(-pitchRandomness, pitchRandomness);
+        audioSource.PlayOneShot(clip);
     }
 
     private void UpdateAimDirection()
@@ -150,7 +171,6 @@ public class PlayerGrab : MonoBehaviour
         grabbedObject.transform.position = Vector2.Lerp(grabbedObject.transform.position, targetPosition, smoothSpeed * Time.fixedDeltaTime);
     }
 
-    // --- 範囲判定のリスト管理を厳格化 ---
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (((1 << collision.gameObject.layer) & itemLayer) != 0)

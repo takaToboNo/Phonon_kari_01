@@ -1,5 +1,7 @@
 using UnityEngine;
+using System.Collections;
 
+[RequireComponent(typeof(AudioSource))]
 public class SoundSpeaker : MonoBehaviour
 {
     [Header("参照設定")]
@@ -15,6 +17,30 @@ public class SoundSpeaker : MonoBehaviour
     [SerializeField] private float waveLifeTime = 3.0f;
     [SerializeField] private float waveScale = 1.0f;
 
+    [Header("SE設定")]
+    [SerializeField] private AudioSource audioSource;
+    [SerializeField] private AudioClip emitSound; // 音波生成時の音
+    [Range(0f, 0.3f)][SerializeField] private float pitchRandomness = 0.05f;
+
+    [Header("演出設定 (オブジェクト自体を大きくする)")]
+    [SerializeField] private float punchScale = 1.2f;      // どれくらい大きくするか(倍率)
+    [SerializeField] private float punchDuration = 0.05f;   // 大きくなるまでの時間 (短めが気持ちいい)
+    [SerializeField] private float returnDuration = 0.1f;    // 元に戻るまでの時間
+
+    private Vector3 originalScale; // 元々の大きさを保存
+    private Coroutine punchCoroutine; // コルーチンの二重動作防止用
+
+    void Awake()
+    {
+        // AudioSourceの取得と設定
+        if (audioSource == null) audioSource = GetComponent<AudioSource>();
+        audioSource.playOnAwake = false;
+        audioSource.loop = false;
+
+        // このオブジェクト自体の初期Scale（大きさ）を覚えておく
+        originalScale = transform.localScale;
+    }
+
     void Start()
     {
         // 指定した間隔（interval）で EmitWave 関数を繰り返し実行する
@@ -28,19 +54,64 @@ public class SoundSpeaker : MonoBehaviour
         // 音波を生成
         GameObject newWave = Instantiate(wavePrefab, exitPoint.position, exitPoint.rotation);
 
-        // 初期化（これまでの SoundWavePlatform の仕様に合わせる）
+        // 初期化
         if (newWave.TryGetComponent<SoundWavePlatform>(out SoundWavePlatform platform))
         {
-            // exitPoint の右方向に発射
             platform.Initialize(exitPoint.right, waveSpeed, waveLifeTime, waveScale);
         }
+
+        // --- SEを鳴らす ---
+        PlayEmitSE();
+
+        // --- 演出（オブジェクト自体をピクッとする） ---
+        if (punchCoroutine != null) StopCoroutine(punchCoroutine); // 動いていたら止める
+        punchCoroutine = StartCoroutine(PunchEffectRoutine());
 
         Debug.Log("スピーカーから音波が射出されました");
     }
 
-    // スピーカーが無効になったら止める（念のため）
+    private void PlayEmitSE()
+    {
+        if (emitSound == null || audioSource == null) return;
+
+        audioSource.pitch = 1f + Random.Range(-pitchRandomness, pitchRandomness);
+        audioSource.PlayOneShot(emitSound);
+    }
+
+    // --- コルーチンによる演出処理 ---
+    private IEnumerator PunchEffectRoutine()
+    {
+        float timer = 0f;
+        Vector3 targetScale = originalScale * punchScale;
+
+        // 1. 大きくなる (Lerpで滑らかに)
+        while (timer < punchDuration)
+        {
+            timer += Time.deltaTime;
+            transform.localScale = Vector3.Lerp(originalScale, targetScale, timer / punchDuration);
+            yield return null;
+        }
+        transform.localScale = targetScale;
+
+        // 2. 元に戻る (Lerpで滑らかに)
+        timer = 0f;
+        while (timer < returnDuration)
+        {
+            timer += Time.deltaTime;
+            transform.localScale = Vector3.Lerp(targetScale, originalScale, timer / returnDuration);
+            yield return null;
+        }
+        transform.localScale = originalScale;
+
+        punchCoroutine = null; // 終わったら参照を消す
+    }
+
     void OnDisable()
     {
         CancelInvoke(nameof(EmitWave));
+
+        // 無効になったら演出を止めて、確実にScaleを元に戻す
+        if (punchCoroutine != null) StopCoroutine(punchCoroutine);
+        transform.localScale = originalScale;
     }
 }
