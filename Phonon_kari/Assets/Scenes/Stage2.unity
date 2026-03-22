@@ -186,7 +186,7 @@ SpriteRenderer:
   m_SortingOrder: -1
   m_MaskInteraction: 0
   m_Sprite: {fileID: 21300000, guid: c3b2da629e0a99740bb1f0a6a09fd206, type: 3}
-  m_Color: {r: 0.7647059, g: 0.69157696, b: 0.4392157, a: 1}
+  m_Color: {r: 0.723232, g: 0.7647059, b: 0.4392157, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -477,6 +477,10 @@ PrefabInstance:
       propertyPath: waveScale
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 7181133982309728403, guid: f74c61b27383d0c42b64faf408e287b9, type: 3}
+      propertyPath: m_SortingOrder
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -493,6 +497,10 @@ PrefabInstance:
     - target: {fileID: 867616858727432541, guid: 4d13ec6bf1c33594baed4b2d05cec16a, type: 3}
       propertyPath: m_Name
       value: WoodGround
+      objectReference: {fileID: 0}
+    - target: {fileID: 3103593635121303009, guid: 4d13ec6bf1c33594baed4b2d05cec16a, type: 3}
+      propertyPath: m_SortingOrder
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7311829595271987848, guid: 4d13ec6bf1c33594baed4b2d05cec16a, type: 3}
       propertyPath: m_LocalScale.x
@@ -636,6 +644,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1763144055389486279, guid: c7be23d746f3ae149830c628bf048ebc, type: 3}
+      propertyPath: m_SortingOrder
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2436852116480354949, guid: c7be23d746f3ae149830c628bf048ebc, type: 3}
       propertyPath: m_LocalScale.x
       value: 1.6475381
@@ -828,6 +840,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1763144055389486279, guid: c7be23d746f3ae149830c628bf048ebc, type: 3}
+      propertyPath: m_SortingOrder
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2436852116480354949, guid: c7be23d746f3ae149830c628bf048ebc, type: 3}
       propertyPath: m_LocalScale.x
       value: 7.231456
@@ -1034,6 +1050,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1763144055389486279, guid: c7be23d746f3ae149830c628bf048ebc, type: 3}
+      propertyPath: m_SortingOrder
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2436852116480354949, guid: c7be23d746f3ae149830c628bf048ebc, type: 3}
       propertyPath: m_LocalScale.x
       value: 8.6738205
@@ -1279,6 +1299,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5563767964909878296, guid: 21c507fff38cb3843bbc1df8881a443e, type: 3}
+      propertyPath: m_SortingOrder
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1292,6 +1316,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1763144055389486279, guid: c7be23d746f3ae149830c628bf048ebc, type: 3}
+      propertyPath: m_SortingOrder
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2436852116480354949, guid: c7be23d746f3ae149830c628bf048ebc, type: 3}
       propertyPath: m_LocalScale.x
       value: 25.43429
@@ -1361,6 +1389,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1763144055389486279, guid: c7be23d746f3ae149830c628bf048ebc, type: 3}
+      propertyPath: m_SortingOrder
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2436852116480354949, guid: c7be23d746f3ae149830c628bf048ebc, type: 3}
       propertyPath: m_LocalScale.x
       value: 1.2841077
