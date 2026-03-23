@@ -142,7 +142,7 @@ MonoBehaviour:
   exitPoint: {fileID: 5985226448267127139}
   wavePrefab: {fileID: 1504280822440212730, guid: df5df17b2f7f18c408f15cff39118d66, type: 3}
   interval: 1
-  startDelay: 0
+  startDelay: 0.5
   waveSpeed: 5
   waveLifeTime: 1.5
   waveScale: 0.7
