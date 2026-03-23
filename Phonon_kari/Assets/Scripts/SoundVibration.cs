@@ -16,15 +16,15 @@ public class SoundVibration : MonoBehaviour
 
     [Header("SE設定")]
     [SerializeField] private AudioSource audioSource;
-    [SerializeField] private AudioClip vibrateSound; // 共振した時の音
+    [SerializeField] private AudioClip vibrateSound; 
     [Range(0f, 0.3f)][SerializeField] private float pitchRandomness = 0.1f;
 
     [Header("演出設定 (オブジェクト自体を大きくする)")]
-    [SerializeField] private float punchScale = 1.3f;      // 共振は少し大きめに(倍率)
+    [SerializeField] private float punchScale = 1.3f;
     [SerializeField] private float punchDuration = 0.05f;
     [SerializeField] private float returnDuration = 0.15f;
 
-    private float lastVibratedTime;
+    private float lastVibratedTime = -100f; // 初期値を十分小さなマイナスにする
     private Vector3 originalScale;
     private Coroutine punchCoroutine;
 
@@ -32,22 +32,39 @@ public class SoundVibration : MonoBehaviour
     {
         if (audioSource == null) audioSource = GetComponent<AudioSource>();
         audioSource.playOnAwake = false;
-
         originalScale = transform.localScale;
+    }
+
+    void OnEnable()
+    {
+        // 出した瞬間、前のクールタイムを引きずらないように過去の時間に設定
+        lastVibratedTime = Time.time - coolTime;
+    }
+
+    void OnDisable()
+    {
+        if (punchCoroutine != null)
+        {
+            StopCoroutine(punchCoroutine);
+            punchCoroutine = null;
+        }
+        transform.localScale = originalScale;
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (Time.time > lastVibratedTime + coolTime)
+        // クールタイム判定
+        if (Time.time >= lastVibratedTime + coolTime)
         {
+            // Tagチェック（"SoundWave"など）を追加するとより確実です
             if (collision.TryGetComponent<SoundWavePlatform>(out SoundWavePlatform oldWave))
             {
                 lastVibratedTime = Time.time;
 
-                // 1. 古い音波を消去
+                // 古い音波を消去
                 Destroy(collision.gameObject);
 
-                // 2. 新しい音波を生成
+                // 新しい音波を生成
                 Vibrate();
             }
         }
@@ -55,7 +72,8 @@ public class SoundVibration : MonoBehaviour
 
     private void Vibrate()
     {
-        // 音波生成
+        if (wavePrefab == null || exitPoint == null) return;
+
         GameObject newWave = Instantiate(wavePrefab, exitPoint.position, exitPoint.rotation);
 
         if (newWave.TryGetComponent<SoundWavePlatform>(out SoundWavePlatform platform))
@@ -63,20 +81,15 @@ public class SoundVibration : MonoBehaviour
             platform.Initialize(exitPoint.right, waveSpeed, waveLifeTime, waveScale);
         }
 
-        // --- SEを鳴らす ---
         PlayVibrateSE();
 
-        // --- 演出（ピクッとする） ---
         if (punchCoroutine != null) StopCoroutine(punchCoroutine);
         punchCoroutine = StartCoroutine(PunchEffectRoutine());
-
-        Debug.Log("共振しました！");
     }
 
     private void PlayVibrateSE()
     {
         if (vibrateSound == null || audioSource == null) return;
-
         audioSource.pitch = 1f + Random.Range(-pitchRandomness, pitchRandomness);
         audioSource.PlayOneShot(vibrateSound);
     }
@@ -103,11 +116,5 @@ public class SoundVibration : MonoBehaviour
         }
         transform.localScale = originalScale;
         punchCoroutine = null;
-    }
-
-    void OnDisable()
-    {
-        if (punchCoroutine != null) StopCoroutine(punchCoroutine);
-        transform.localScale = originalScale;
     }
 }

@@ -12,6 +12,9 @@ public class PlayerGrab : MonoBehaviour
     [SerializeField] private LayerMask itemLayer;
     [SerializeField] private float maxGrabDistance = 2.0f;
 
+    [Header("インベントリ連携")]
+    [SerializeField] private InventoryManager inventoryManager;
+
     [Header("エイム矢印の設定")]
     [SerializeField] private Sprite arrowSprite;
     [SerializeField] private float arrowDistance = 1.5f;
@@ -26,7 +29,6 @@ public class PlayerGrab : MonoBehaviour
 
     private GameObject grabbedObject;
     private Rigidbody2D grabbedRb;
-    private Collider2D grabbedCol;
     private List<GameObject> canGrabItems = new List<GameObject>();
 
     private bool isAiming = false;
@@ -51,17 +53,28 @@ public class PlayerGrab : MonoBehaviour
         }
     }
 
+    void Start()
+    {
+        // インベントリマネージャーの自動取得
+        if (inventoryManager == null)
+        {
+            GameObject invObj = GameObject.FindWithTag("Inventory");
+            if (invObj != null)
+            {
+                inventoryManager = invObj.GetComponent<InventoryManager>();
+            }
+        }
+    }
+
     void Update()
     {
         HandleInput();
 
-        // アイテムを持っているなら、毎フレーム位置を更新する
         if (grabbedObject != null)
         {
             FollowPlayer();
         }
 
-        // エイム矢印の更新
         if (isAiming && generatedArrow != null)
         {
             UpdateArrowPositionAndRotation();
@@ -72,7 +85,7 @@ public class PlayerGrab : MonoBehaviour
     {
         if (Gamepad.current == null && Keyboard.current == null) return;
 
-        // 拾う：西ボタン(Gamepad) または 左クリック(Mouse)
+        // 拾う入力
         bool grabPressed = (Gamepad.current != null && Gamepad.current.buttonWest.wasPressedThisFrame) ||
                            (Mouse.current != null && Mouse.current.leftButton.wasPressedThisFrame);
 
@@ -81,7 +94,16 @@ public class PlayerGrab : MonoBehaviour
             TryGrabNearestItem();
         }
 
-        // 投げるための溜め：東ボタン(Gamepad) または 右クリック(Mouse)
+        // 入れ替え入力
+        bool swapPressed = (Gamepad.current != null && Gamepad.current.rightShoulder.wasPressedThisFrame) ||
+                           (Keyboard.current != null && Keyboard.current.eKey.wasPressedThisFrame);
+
+        if (swapPressed)
+        {
+            SwapWithInventory();
+        }
+
+        // 投げる入力
         bool dropButtonHeld = (Gamepad.current != null && Gamepad.current.buttonEast.isPressed) ||
                               (Mouse.current != null && Mouse.current.rightButton.isPressed);
 
@@ -131,21 +153,15 @@ public class PlayerGrab : MonoBehaviour
     private void GrabItem(GameObject target)
     {
         grabbedObject = target;
-
-        // 拾った瞬間、親子関係を一度解除（変な座標オフセットを防ぐ）
         grabbedObject.transform.SetParent(null);
 
         if (grabbedObject.TryGetComponent(out grabbedRb))
         {
-            grabbedRb.bodyType = RigidbodyType2D.Kinematic; // 物理に邪魔させない
+            // 物理演算をKinematicにするだけで手元に固定されるため、
+            // コライダーのisTriggerを書き換える必要はありません。
+            grabbedRb.bodyType = RigidbodyType2D.Kinematic;
             grabbedRb.linearVelocity = Vector2.zero;
             grabbedRb.angularVelocity = 0f;
-        }
-
-        // プレイヤーとぶつからないようにコライダーを一時的にトリガー化
-        if (grabbedObject.TryGetComponent(out grabbedCol))
-        {
-            grabbedCol.isTrigger = true;
         }
 
         PlayRandomPitchSE(grabSound);
@@ -155,35 +171,52 @@ public class PlayerGrab : MonoBehaviour
     {
         GameObject itemToThrow = grabbedObject;
         Rigidbody2D rbToThrow = grabbedRb;
-        Collider2D colToThrow = grabbedCol;
 
         grabbedObject = null;
         grabbedRb = null;
-        grabbedCol = null;
 
-        if (itemToThrow != null)
+        if (itemToThrow != null && rbToThrow != null)
         {
-            if (colToThrow != null) colToThrow.isTrigger = false; // 物理を戻す
+            // 物理演算をDynamicに戻して発射
+            rbToThrow.bodyType = RigidbodyType2D.Dynamic;
+            rbToThrow.linearVelocity = Vector2.zero;
+            rbToThrow.AddForce(aimDirection * throwForce, ForceMode2D.Impulse);
 
-            if (rbToThrow != null)
-            {
-                rbToThrow.bodyType = RigidbodyType2D.Dynamic;
-                rbToThrow.linearVelocity = Vector2.zero;
-                rbToThrow.AddForce(aimDirection * throwForce, ForceMode2D.Impulse);
-            }
             PlayRandomPitchSE(throwSound);
+        }
+    }
+
+    private void SwapWithInventory()
+    {
+        if (inventoryManager == null) return;
+
+        GameObject itemInHand = grabbedObject;
+        inventoryManager.SwapItem(itemInHand, out GameObject itemFromInv, out Quaternion invRot);
+
+        grabbedObject = null;
+        grabbedRb = null;
+
+        if (itemInHand != null)
+        {
+            itemInHand.SetActive(false);
+        }
+
+        if (itemFromInv != null)
+        {
+            itemFromInv.SetActive(true);
+            itemFromInv.transform.position = transform.position;
+            itemFromInv.transform.rotation = invRot;
+            GrabItem(itemFromInv);
         }
     }
 
     private void FollowPlayer()
     {
-        // プレイヤーの向きに合わせて左右オフセットを調整
         Vector2 currentOffset = grabOffset;
         currentOffset.x *= Mathf.Sign(transform.localScale.x);
 
         Vector3 targetPosition = transform.position + (Vector3)currentOffset;
 
-        // アイテムの位置を滑らかに更新（Update内で動かす）
         grabbedObject.transform.position = Vector3.Lerp(
             grabbedObject.transform.position,
             targetPosition,

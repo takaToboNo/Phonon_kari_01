@@ -41,10 +41,28 @@ public class SoundSpeaker : MonoBehaviour
         originalScale = transform.localScale;
     }
 
-    void Start()
+    // オブジェクトが有効になるたび（シーン開始時やインベントリから出した時）に呼ばれる
+    void OnEnable()
     {
-        // 指定した間隔（interval）で EmitWave 関数を繰り返し実行する
+        // 既存の生成予約を念のためクリア
+        CancelInvoke(nameof(EmitWave));
+        // 音波の生成を再開
         InvokeRepeating(nameof(EmitWave), startDelay, interval);
+    }
+
+    // オブジェクトが無効になった時（インベントリにしまった時）に呼ばれる
+    void OnDisable()
+    {
+        // 生成を停止
+        CancelInvoke(nameof(EmitWave));
+
+        // 演出用コルーチンが動いていたら止めてScaleを戻す
+        if (punchCoroutine != null)
+        {
+            StopCoroutine(punchCoroutine);
+            punchCoroutine = null;
+        }
+        transform.localScale = originalScale;
     }
 
     private void EmitWave()
@@ -60,11 +78,11 @@ public class SoundSpeaker : MonoBehaviour
             platform.Initialize(exitPoint.right, waveSpeed, waveLifeTime, waveScale);
         }
 
-        // --- SEを鳴らす ---
+        // SEを鳴らす
         PlayEmitSE();
 
-        // --- 演出（オブジェクト自体をピクッとする） ---
-        if (punchCoroutine != null) StopCoroutine(punchCoroutine); // 動いていたら止める
+        // 演出（オブジェクト自体をピクッとする）
+        if (punchCoroutine != null) StopCoroutine(punchCoroutine);
         punchCoroutine = StartCoroutine(PunchEffectRoutine());
 
         Debug.Log("スピーカーから音波が射出されました");
@@ -78,13 +96,12 @@ public class SoundSpeaker : MonoBehaviour
         audioSource.PlayOneShot(emitSound);
     }
 
-    // --- コルーチンによる演出処理 ---
     private IEnumerator PunchEffectRoutine()
     {
         float timer = 0f;
         Vector3 targetScale = originalScale * punchScale;
 
-        // 1. 大きくなる (Lerpで滑らかに)
+        // 1. 大きくなる
         while (timer < punchDuration)
         {
             timer += Time.deltaTime;
@@ -93,7 +110,7 @@ public class SoundSpeaker : MonoBehaviour
         }
         transform.localScale = targetScale;
 
-        // 2. 元に戻る (Lerpで滑らかに)
+        // 2. 元に戻る
         timer = 0f;
         while (timer < returnDuration)
         {
@@ -103,15 +120,6 @@ public class SoundSpeaker : MonoBehaviour
         }
         transform.localScale = originalScale;
 
-        punchCoroutine = null; // 終わったら参照を消す
-    }
-
-    void OnDisable()
-    {
-        CancelInvoke(nameof(EmitWave));
-
-        // 無効になったら演出を止めて、確実にScaleを元に戻す
-        if (punchCoroutine != null) StopCoroutine(punchCoroutine);
-        transform.localScale = originalScale;
+        punchCoroutine = null;
     }
 }
