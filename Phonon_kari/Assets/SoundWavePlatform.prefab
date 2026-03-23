@@ -125,7 +125,7 @@ MonoBehaviour:
   moveSpeed: 5
   absorptionLayer:
     serializedVersion: 2
-    m_Bits: 64
+    m_Bits: 1088
   penetrationLayer:
     serializedVersion: 2
     m_Bits: 4096
