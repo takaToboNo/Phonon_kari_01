@@ -278,6 +278,9 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 16512
   maxGrabDistance: 2
+  arrowSprite: {fileID: -765150924802650856, guid: 239296e88d67b294b9add8d2d6c288fc, type: 3}
+  arrowDistance: 1.2
+  arrowScale: {x: 0.25, y: 0.25, z: 1}
   audioSource: {fileID: 5586462897706473192}
   grabSound: {fileID: 8300000, guid: e4c97758b8cffa64596475bdcf1287d4, type: 3}
   throwSound: {fileID: 8300000, guid: f6771ca249febe6429e30050e06caa20, type: 3}
