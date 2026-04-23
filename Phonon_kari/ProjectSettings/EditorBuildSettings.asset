@@ -16,7 +16,7 @@ EditorBuildSettings:
     guid: a67ba0066a83b0d47910de4c396f466e
   - enabled: 1
     path: Assets/Scenes/Stage2.unity
-    guid: a21717aeea390e14c864267d79537436
+    guid: d85f4cb976aa28a4a8b78796c01141a1
   - enabled: 1
     path: Assets/Scenes/Stage3.unity
     guid: ecb6416803975424db191aedfa570abd
@@ -25,10 +25,10 @@ EditorBuildSettings:
     guid: cd146a27506cee747b682334065c1e22
   - enabled: 1
     path: Assets/Scenes/Stage5.unity
-    guid: f3074cae0f18acb478a6d2d795cf328d
+    guid: eac158d735304c543a93f1f9bec0ee80
   - enabled: 1
     path: Assets/Scenes/Stage6.unity
-    guid: 5130a955bf65ede44af07397e3dcfb84
+    guid: faf025154f543f742afe9e0ddfec3761
   - enabled: 1
     path: Assets/Scenes/Stage7.unity
     guid: edb6cace62f7faa4e83538710ffe5f45
@@ -37,6 +37,15 @@ EditorBuildSettings:
     guid: ddd71de69c821ff46a9a2da556928f00
   - enabled: 1
     path: Assets/Scenes/Stage9.unity
+    guid: 8cc3baf3e5ef0bf4bb5598dc5bbe56e9
+  - enabled: 1
+    path: Assets/Scenes/Stage10.unity
+    guid: f3074cae0f18acb478a6d2d795cf328d
+  - enabled: 1
+    path: Assets/Scenes/Stage11.unity
+    guid: 3d9dbfceb4e199540b44d562badbbfa4
+  - enabled: 1
+    path: Assets/Scenes/Stage12.unity
     guid: bcdfc6e93d1f7e046b42a14b00bff473
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
