@@ -146,7 +146,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SoundVibration
   exitPoint: {fileID: 6532353511877157788}
   wavePrefab: {fileID: 1504280822440212730, guid: df5df17b2f7f18c408f15cff39118d66, type: 3}
-  waveSpeed: 5
+  waveSpeed: 10.05
   waveLifeTime: 3
   coolTime: 0.5
   waveScale: 1
