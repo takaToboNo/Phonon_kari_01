@@ -139,7 +139,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 3072
   minVelocity: 2.7
-  waveSpeed: 5
+  waveSpeed: 10.37
   waveLifeTime: 1.5
   waveScale: 1
   audioSource: {fileID: 2302295876799304642}

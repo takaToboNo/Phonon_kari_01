@@ -250,8 +250,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: be5a1ab639ba45f42be95435011140be, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMovement
-  moveSpeed: 5
-  jumpForce: 7
+  moveSpeed: 10
+  jumpForce: 10
   groundLayer:
     serializedVersion: 2
     m_Bits: 7488
@@ -278,6 +278,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 16512
   maxGrabDistance: 2
+  inventoryManager: {fileID: 0}
   arrowSprite: {fileID: -765150924802650856, guid: 239296e88d67b294b9add8d2d6c288fc, type: 3}
   arrowDistance: 1.2
   arrowScale: {x: 0.25, y: 0.25, z: 1}
